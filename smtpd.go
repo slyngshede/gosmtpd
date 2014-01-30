@@ -50,11 +50,12 @@ func processCmd(client *Client)(resp string, err error){
     cmd := strings.ToUpper(input)
     switch {
         case strings.Index(cmd, "HELO") == 0:
-            resp = "250 " + host + " Hello " + input[5:] + "\r\n"
+            resp = "250 " + client.config.Host + " Hello " + input[5:] + "\r\n"
         case strings.Index(cmd, "EHLO") == 0:
             remote := client.conn.RemoteAddr().String()
-            resp = fmt.Sprintf("250 %s Hello %s [%s]\r\n250-SIZE %d\r\n", host,
-            input[5:], remote, maxsize)
+            resp = fmt.Sprintf("250 %s Hello %s [%s]\r\n250-SIZE %d\r\n",
+            client.config.Host,
+            input[5:], remote, client.config.Maxsize)
         case strings.Index(cmd, "QUIT") == 0:
             resp = "221 Bye\r\n"
             client.state = 3
